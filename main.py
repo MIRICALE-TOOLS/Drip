@@ -12,13 +12,16 @@ init(convert=True)
 ##CLI Logo
 def logo():
     cmd('cls')
-    ctypes.windll.kernel32.SetConsoleTitleW("API Dawg V0.1")
+    ctypes.windll.kernel32.SetConsoleTitleW("API Dawg V0.5")
     p(color.YELLOW +"""
-    ______   __    __     ______  
-   /\  == \ /\ "-./  \   /\__  _\ 
-   \ \  _-/ \ \ \-./\ \  \/_/\ \/ 
-    \ \_\    \ \_\ \ \_\    \ \_\ 
-     \/_/     \/_/  \/_/     \/_/ 
+      ___  ______ _____  ______  ___  _    _ _____ 
+     / _ \ | ___ \_   _| |  _  \/ _ \| |  | |  __ \\
+    / /_\ \| |_/ / | |   | | | / /_\ \ |  | | |  \/
+    |  _  ||  __/  | |   | | | |  _  | |/\| | | __ 
+    | | | || |    _| |_  | |/ /| | | \  /\  / |_\ \\
+    \_| |_/\_|    \___/  |___/ \_| |_/\/  \/ \____/
+                                               
+                                               
     """ + color.LIGHTYELLOW_EX)
 
 ##CLI Menus
@@ -35,7 +38,7 @@ def menu():
     elif choice == '2':
         p("coming soon")
         menu()
-    elif choice == '3':
+    elif choice == 'x':
         exit
     else:
         menu()
@@ -64,7 +67,7 @@ def urlshort():
     url = "https://owo.vc/generate"
     data = {"link": f"{link}",
     "generator": "owo",
-    "preventScrape": "true",d
+    "preventScrape": "true",
     "owoify": "true"}
     headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
     r = requests.post(url, data=json.dumps(data), headers=headers)
