@@ -4,8 +4,14 @@ from colorama import Fore, init
 
 
 ##Global Variables
-color = Fore
-
+orange = Fore.YELLOW
+yellow = Fore.LIGHTYELLOW_EX
+cyan = Fore.LIGHTCYAN_EX
+blue = Fore.CYAN
+red = Fore.LIGHTRED_EX
+green = Fore.LIGHTGREEN_EX
+reset = Fore.RESET
+cmd = os.system
 
 ##Convert Colorama for Windows Command Processors
 init(convert=True)
@@ -14,37 +20,52 @@ init(convert=True)
 ##CLI Logo
 def logo():
     os.system('cls')
-    ctypes.windll.kernel32.SetConsoleTitleW("API Dawg V0.6")
-    print(color.YELLOW +"""
-      ___  ______ _____  ______  ___  _    _ _____ 
-     / _ \ | ___ \_   _| |  _  \/ _ \| |  | |  __ \\
-    / /_\ \| |_/ / | |   | | | / /_\ \ |  | | |  \/
-    |  _  ||  __/  | |   | | | |  _  | |/\| | | __ 
-    | | | || |    _| |_  | |/ /| | | \  /\  / |_\ \\
-    \_| |_/\_|    \___/  |___/ \_| |_/\/  \/ \____/
+    ctypes.windll.kernel32.SetConsoleTitleW("API Dawg V0.7")
+    print(yellow +"""
+                      ___  ______ _____  ______  ___  _    _ _____ 
+                     / _ \ | ___ \_   _| |  _  \/ _ \| |  | |  __ \\
+                    / /_\ \| |_/ / | |   | | | / /_\ \ |  | | |  \/
+                    |  _  ||  __/  | |   | | | |  _  | |/\| | | __ 
+                    | | | || |    _| |_  | |/ /| | | \  /\  / |_\ \\
+                    \_| |_/\_|    \___/  |___/ \_| |_/\/  \/ \____/
                                                
                                                
-    """ + color.LIGHTYELLOW_EX)
+    """ + reset)
 
 
 ##Main Menu
 def menu():
     logo()
     motd()
-    print("""
-    [1] Module List
-    [2] About
-    [X] Exit
+    print(f"""
+    [{red}1{reset}] URL Shortener 
+    [{green}2{reset}] Discord ID Lookup
+    [{blue}3{reset}] Discord Token Login Helper
+    [{red}4{reset}] Social Media Hunter
+    [{green}?{reset}] About
+    [{blue}X{reset}] Exit
     """)
     
     choice = input("")
 
 
     if choice == '1':
-        modules()
+        urlshort()
 
 
     elif choice == '2':
+        discordlookup()
+
+
+    elif choice == '3':
+        dtlh()
+
+
+    elif choice == '4':
+        smhunter()
+
+
+    elif choice == '?':
         logo()
         print("""
         I'm making this tool to expand my knowledge on the following topics: Web APIs, JSON & Web Requests
@@ -64,32 +85,16 @@ def menu():
         menu()
 
 
-##Module List
-def modules():
-    logo()
-    print("""
-    [1] URL Shortner
-    [2] Discord ID Lookup
-    [<] Go Back
-    """)
+##Message of the Day (Random Anime Quotes)
+def motd():
+    url = "https://animechan.vercel.app/api/random"
+    payload={}
+    headers = {}
 
-    choice = input("")
+    r = requests.request("GET", url, headers=headers, data=payload)
+    response = r.json()
 
-
-    if choice == '1':
-        urlshort()
-
-
-    elif choice == '2':
-        discordlookup()
-
-
-    elif choice == '<':
-        menu()
-
-
-    else: 
-        modules()
+    print(response['quote']+" - "+response['character'])
 
 
 ##URL Shortner
@@ -124,7 +129,7 @@ def urlshort():
 
         pyperclip.copy(response['result'])
         time.sleep(3)
-        modules()
+        menu()
 
 
     elif choice == '2':
@@ -144,7 +149,7 @@ def urlshort():
 
         pyperclip.copy("1pt.co/" + response['short'])
         time.sleep(3)
-        modules()
+        menu()
 
 
     elif choice == '3':
@@ -163,46 +168,99 @@ def urlshort():
 
         pyperclip.copy(response['result_url'])
         time.sleep(3)
-        modules()
+        menu()
 
 
     elif choice == '<':
-        modules()
+        menu()
 
 
     else:
         urlshort()
 
 
+##Discord ID Lookup
 def discordlookup():
     logo()
 
     id = input('Discord ID: ')
 
-    url = f"https://api.leaked.wiki/discorduser?json=yes&id={id}"
-    payload = {}
-    headers = {'Content-Type': 'text/plain'}
 
-    r = requests.request("GET", url, headers=headers, data=payload)
-    response = r.json()
+    if id == '<':
+        menu()
+    
+    
+    else:
+        url = f"https://api.leaked.wiki/discorduser?json=yes&id={id}"
+        payload = {}
+        headers = {'Content-Type': 'text/plain'}
 
-    print('Username: ' + response['username'] + '#' + response['discriminator'])
-    print('Avatar URL: ' + response['avatar'])
+        r = requests.request("GET", url, headers=headers, data=payload)
+        response = r.json()
 
-    time.sleep(5)
-    modules()
+        print('Username: ' + response['username'] + '#' + response['discriminator'])
+        print('Avatar URL: ' + response['avatar'])
 
-
-##Message of the Day (Random Anime Quotes)
-def motd():
-    url = "https://animechan.vercel.app/api/random"
-    payload={}
-    headers = {}
-
-    r = requests.request("GET", url, headers=headers, data=payload)
-    response = r.json()
-
-    print(response['quote']+" - "+response['character'])
+        time.sleep(5)
+        menu()
 
 
+##Discord Token Login Helper
+def dtlh():
+    logo()
+    token = input('Discord Token: ')
+    script = """function login(token) {
+    setInterval(() => {
+    document.body.appendChild(document.createElement `iframe`).contentWindow.localStorage.token = `"${token}"`
+    }, 50);
+    setTimeout(() => {
+    location.reload();
+    }, 0);
+    }
+    login(""" + "\"" + token + "\")"
+    pyperclip.copy(script)
+    logo()
+    print("Script Copied To Clipboard, Paste It In The Console In Discord!")
+    time.sleep(3)
+    menu()
+
+
+##Social Media Hunter (OSINT Tool)
+def smhunter():
+    logo()
+    name = input('Username: ')
+    logo()
+    print(f'Opening Possible Social Media Pages for {name}!\n')
+
+
+    print('Opening TikTok...')
+    cmd(f'start https://www.tiktok.com/@{name}')
+
+
+    print('Opening GitHub...')
+    cmd(f'start https://www.github.com/{name}')
+
+
+    print('Opening Twitter...')
+    cmd(f'start https://www.twitter.com/{name}')
+
+
+    print('Opening Twitch...')
+    cmd(f'start https://www.twitch.tv/{name}')
+
+
+    print('Opening YouTube...')
+    cmd(f'start https://www.youtube.com/c/{name}')
+
+
+    print('Opening Roblox...\n')
+    cmd(f'start https://www.roblox.com/search/users?keyword={name}')
+
+
+    print('Done! Please check your webbrowser for results.')
+    time.sleep(3)
+    menu()
+
+
+##Main Thread
 menu()
