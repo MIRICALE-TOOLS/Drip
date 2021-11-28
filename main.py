@@ -1,6 +1,7 @@
 ##Imports
 import requests, os, ctypes, json, pyperclip, time
 from colorama import Fore, init
+from urllib.request import urlopen
 
 
 ##Global Variables
@@ -20,7 +21,7 @@ init(convert=True)
 ##CLI Logo
 def logo():
     os.system('cls')
-    ctypes.windll.kernel32.SetConsoleTitleW("API Dawg V0.7")
+    ctypes.windll.kernel32.SetConsoleTitleW("API Dawg V0.8")
     print(yellow +"""
                       ___  ______ _____  ______  ___  _    _ _____ 
                      / _ \ | ___ \_   _| |  _  \/ _ \| |  | |  __ \\
@@ -42,8 +43,9 @@ def menu():
     [{green}2{reset}] Discord ID Lookup
     [{blue}3{reset}] Discord Token Login Helper
     [{red}4{reset}] Social Media Hunter
-    [{green}?{reset}] About
-    [{blue}X{reset}] Exit
+    [{green}5{reset}] Rust Code Checker
+    [{blue}?{reset}] About
+    [{red}X{reset}] Exit
     """)
     
     choice = input("")
@@ -63,6 +65,10 @@ def menu():
 
     elif choice == '4':
         smhunter()
+
+
+    elif choice == '5':
+        rustcodechecker()
 
 
     elif choice == '?':
@@ -262,5 +268,32 @@ def smhunter():
     menu()
 
 
+##Rust Code Checker
+def rustcodechecker():
+    logo()
+    pin = input('Code (4 Digit Numerical PIN): ')
+    url = 'https://raw.githubusercontent.com/xshonda/The-List/main/codes.txt'
+    data = requests.get(url).text
+    list = data.splitlines()
+
+    try:
+        idx = list.index(pin)
+
+
+    except ValueError:  # pin is not in list
+        idx = -1
+        print('Your Code is Strong AF! (Your Code Is Not In The List)')
+
+        time.sleep(5)
+        menu()
+
+
+    else:
+        print(f'Your Code Strength Is: {idx}/10000')
+        time.sleep(5)
+        menu()
+
+
+    
 ##Main Thread
 menu()
